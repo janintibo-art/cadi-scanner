@@ -1,56 +1,64 @@
 # 🛒 Cadi Scanner
 
-Application Android native (Kotlin) pour calculer le total de son caddie :
+Application Android native (Kotlin) pour suivre le total de son caddie **et** comparer les prix.
 
-- 📷 Photographiez l'étiquette prix du magasin
-- 🔍 L'OCR (ML Kit, 100 % hors-ligne) détecte le prix automatiquement
-- ➕ Les prix s'additionnent, avec quantité ×2, ×3… (boutons + / −)
-- ✏️ Saisie manuelle possible si la photo ne passe pas
-- 💾 Le caddie est sauvegardé même si on ferme l'appli
+## Fonctions
 
-## Compilation automatique
+- 🔎 **Scan du code-barres** → nom du produit, **prix moyen relevé**, **prix le plus bas connu**, et **le moins cher dans un rayon de 20 km** autour de vous
+- 📷 **Photo de l'étiquette** → l'OCR détecte le prix (hors-ligne, ML Kit)
+- ➕ Quantités ×2, ×3… avec boutons + / −, total en direct
+- ✏️ Saisie manuelle en secours
+- 💾 Caddie sauvegardé entre deux ouvertures
 
-À chaque `git push` sur `main`, GitHub Actions compile l'APK.
-Récupérez-le dans l'onglet **Actions** → dernier build → **Artifacts** → `cadi-scanner-apk`.
+## ⚠️ Sur le comparatif de prix — à lire
 
-## Commandes Termux
+Aucune enseigne (Leclerc, Carrefour, Lidl, Intermarché…) ne publie ses prix rayon
+via une API gratuite. Le comparatif s'appuie donc sur **Open Prices**
+(https://prices.openfoodfacts.org), base **collaborative** alimentée par les
+utilisateurs, sous licence **ODbL**.
+
+Conséquences concrètes :
+
+- beaucoup de produits n'ont **aucun relevé** → l'app bascule sur la saisie manuelle
+- les relevés existants peuvent être **anciens** (la date est affichée)
+- la couverture géographique est inégale selon les régions
+- ce n'est **pas** un prix officiel : toujours vérifier en rayon
+
+Plus il y a de contributeurs, meilleure est la base : vous pouvez ajouter vos
+propres relevés sur prices.openfoodfacts.org ou via l'appli Open Food Facts.
+
+Sources de données : Open Food Facts (noms produits, ODbL) et Open Prices (prix, ODbL).
+
+## Commandes Termux (connexion par navigateur)
 
 ```bash
-# 1. Préparation (une seule fois)
+# Installation
+pkg update -y && pkg install -y gh git unzip
 termux-setup-storage
-pkg update -y && pkg install -y git unzip
 
-# 2. Dézipper (le zip étant dans Téléchargements)
-cd ~
-unzip ~/storage/downloads/cadi-scanner.zip
+# Connexion GitHub via le web
+gh auth login
+#  → GitHub.com / HTTPS / Y / Login with a web browser
+#  → saisir le code affiché sur github.com/login/device
+
+# Projet
+cd ~ && unzip ~/storage/downloads/cadi-scanner.zip -d cadi-scanner
 cd cadi-scanner
+git init && git branch -M main
+git config --global user.name "TonPseudo"
+git config --global user.email "toi@mail.com"
+git add . && git commit -m "Premier commit"
 
-# 3. Créer le dépôt git local
-git init
-git branch -M main
-git add .
-git -c user.name="VotrePseudo" -c user.email="vous@mail.com" commit -m "Premier commit"
-
-# 4. Créer le dépôt sur GitHub (via le site github.com → New repository,
-#    nom : cadi-scanner, SANS cocher "Add a README") puis :
-git remote add origin https://github.com/VOTRE_PSEUDO/cadi-scanner.git
-git push -u origin main
-# Identifiant : votre pseudo GitHub
-# Mot de passe : un token PAT (github.com → Settings → Developer settings
-#                → Personal access tokens → Generate, cocher "repo")
-```
-
-Option plus simple avec l'outil GitHub CLI :
-
-```bash
-pkg install -y gh
-gh auth login          # suivre les instructions
+# Création du dépôt + push en une commande
 gh repo create cadi-scanner --public --source=. --push
+
+# Suivi de la compilation
+gh run watch
 ```
 
-## Installer l'APK
+## Récupérer l'APK
 
-1. Onglet **Actions** du dépôt → attendre le ✅ (~3-5 min)
-2. Cliquer sur le build → télécharger l'artifact `cadi-scanner-apk` (un zip)
-3. Le dézipper : `app-debug.apk`
-4. Ouvrir l'APK sur le téléphone et autoriser les sources inconnues
+Onglet **Actions** du dépôt → dernier build ✅ → Artifacts → `cadi-scanner-apk`
+→ dézipper → installer `app-debug.apk` (autoriser les sources inconnues).
+
+Ou en ligne de commande : `gh run download -n cadi-scanner-apk`

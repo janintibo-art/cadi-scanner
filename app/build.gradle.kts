@@ -37,4 +37,6 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     // OCR ML Kit : modele embarque, fonctionne 100% hors-ligne
     implementation("com.google.mlkit:text-recognition:16.0.0")
+    // Lecture des codes-barres EAN/UPC, egalement hors-ligne
+    implementation("com.google.mlkit:barcode-scanning:17.3.0")
 }
