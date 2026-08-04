@@ -1,80 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="14dp">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="📝 Liste de courses"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/listeEntete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="#EEEEEE"
-        android:gravity="center"
-        android:padding="12dp"
-        android:textSize="15sp" />
-
-    <ListView
-        android:id="@+id/listeItems"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="8dp"
-        android:divider="#DDDDDD"
-        android:dividerHeight="1dp" />
+    android:background="@color/papier"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="@color/caisse_sombre"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
 
-        <Button
-            android:id="@+id/btnAjoutItem"
-            android:layout_width="0dp"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="1"
-            android:text="➕ Ajouter" />
-
-        <Button
-            android:id="@+id/btnSuggestions"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="⭐ Habituels" />
+            android:fontFamily="sans-serif-condensed"
+            android:letterSpacing="0.22"
+            android:text="MA LISTE"
+            android:textColor="@color/blanc"
+            android:textSize="15sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="@dimen/marge">
 
-        <Button
-            android:id="@+id/btnNettoyer"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/listeEntete"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="1"
-            android:text="🧹 Nettoyer" />
+            android:background="@drawable/bandeau_liste"
+            android:fontFamily="sans-serif-condensed"
+            android:paddingLeft="16dp"
+            android:paddingTop="13dp"
+            android:paddingRight="14dp"
+            android:paddingBottom="13dp"
+            android:textColor="@color/encre"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnFermerListe"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="Fermer" />
+            android:layout_marginTop="12dp"
+            app:cardBackgroundColor="@color/papier_clair"
+            app:cardCornerRadius="@dimen/rayon_carte"
+            app:cardElevation="@dimen/relief_carte">
+
+            <ListView
+                android:id="@+id/listeItems"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/papier_ombre"
+                android:dividerHeight="1dp"
+                android:padding="10dp"
+                android:scrollbars="none" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnAjoutItem"
+                style="@style/Bouton.Principal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:text="Ajouter" />
+
+            <Button
+                android:id="@+id/btnSuggestions"
+                style="@style/Bouton.Secondaire"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:text="Mes habituels" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnNettoyer"
+                style="@style/Bouton.Secondaire"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:text="Nettoyer" />
+
+            <Button
+                android:id="@+id/btnFermerListe"
+                style="@style/Bouton.Secondaire"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:text="Fermer" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

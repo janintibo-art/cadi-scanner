@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="marge">16dp</dimen>
+    <dimen name="marge_petite">8dp</dimen>
+    <dimen name="rayon_carte">14dp</dimen>
+    <dimen name="relief_carte">6dp</dimen>
+    <dimen name="relief_bouton">4dp</dimen>
+</resources>

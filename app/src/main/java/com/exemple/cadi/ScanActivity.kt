@@ -33,7 +33,7 @@ import java.util.concurrent.Executors
 class ScanActivity : AppCompatActivity() {
 
     private lateinit var apercu: PreviewView
-    private lateinit var bandeauTotal: TextView
+    private lateinit var bandeauTotal: EtiquetteTotal
     private lateinit var bandeauInfo: TextView
     private lateinit var feedback: Feedback
 
@@ -71,6 +71,7 @@ class ScanActivity : AppCompatActivity() {
         bandeauTotal = findViewById(R.id.scanTotal)
         bandeauInfo = findViewById(R.id.scanInfo)
 
+        animerTrait()
         findViewById<Button>(R.id.btnTermine).setOnClickListener { finish() }
         findViewById<Button>(R.id.btnSaisie).setOnClickListener {
             enPause = true
@@ -140,7 +141,7 @@ class ScanActivity : AppCompatActivity() {
         enPause = true
         ui.post {
             feedback.succes()
-            bandeauInfo.text = "Code $code — recherche du prix…"
+            infoAvecFondu("Code $code — recherche du prix…")
         }
 
         reseau.execute {
@@ -236,28 +237,48 @@ class ScanActivity : AppCompatActivity() {
 
     private fun reprendre() {
         enPause = false
-        bandeauInfo.text = "Visez un code-barres"
+        infoAvecFondu("Visez un code-barres")
+    }
+
+    /** Change le texte d'information avec un petit fondu. */
+    private fun infoAvecFondu(texte: String) {
+        bandeauInfo.animate().alpha(0f).setDuration(110).withEndAction {
+            bandeauInfo.text = texte
+            bandeauInfo.animate().alpha(1f).setDuration(160).start()
+        }.start()
     }
 
     // ---------- Bandeau ----------
 
     private fun majBandeau() {
-        bandeauTotal.text = "${fmt(Caddie.total)}  •  ${Caddie.nbArticles} art."
+        val nb = Caddie.nbArticles
+        val legende = when {
+            nb == 0 -> "Caddie vide"
+            Caddie.economies > 0.005 ->
+                "$nb article${if (nb > 1) "s" else ""}  ·  ${fmt(Caddie.economies)} économisés"
+            else -> "$nb article${if (nb > 1) "s" else ""}"
+        }
+        bandeauTotal.afficher(Caddie.total, Caddie.budget, legende)
 
         val ratio = Caddie.ratioBudget
-        val couleur = when {
-            ratio == null -> 0xFF1B5E20.toInt()
-            ratio >= 1.0 -> 0xFFB71C1C.toInt()
-            ratio >= 0.8 -> 0xFFE65100.toInt()
-            else -> 0xFF1B5E20.toInt()
-        }
-        bandeauTotal.setBackgroundColor(couleur)
+        if (ratio != null && ratio >= 1.0) feedback.alerte()
+    }
 
-        if (ratio != null && ratio >= 1.0) {
-            feedback.alerte()
-            bandeauTotal.text = "${fmt(Caddie.total)} / ${fmt(Caddie.budget)} — DÉPASSÉ"
-        } else if (ratio != null) {
-            bandeauTotal.text = "${fmt(Caddie.total)} / ${fmt(Caddie.budget)}"
+    /** Trait lumineux qui balaye la zone de visee, comme une caisse de supermarche. */
+    private fun animerTrait() {
+        val trait = findViewById<android.view.View>(R.id.traitScan)
+        val zone = findViewById<android.view.View>(R.id.zoneVisee)
+        zone.post {
+            val amplitude = zone.height / 2f - 6f
+            android.animation.ObjectAnimator.ofFloat(
+                trait, "translationY", -amplitude, amplitude
+            ).apply {
+                duration = 1600
+                repeatMode = android.animation.ValueAnimator.REVERSE
+                repeatCount = android.animation.ValueAnimator.INFINITE
+                interpolator = android.view.animation.AccelerateDecelerateInterpolator()
+                start()
+            }
         }
     }
 

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Encre du ticket de caisse -->
+    <color name="encre">#14181C</color>
+    <color name="encre_pale">#5A6169</color>
+    <color name="encre_fantome">#98A0A8</color>
+
+    <!-- Papier thermique -->
+    <color name="papier">#F2F1ED</color>
+    <color name="papier_clair">#FBFAF7</color>
+    <color name="papier_ombre">#DEDCD5</color>
+
+    <!-- Vert des afficheurs de caisse -->
+    <color name="caisse">#0F6B4A</color>
+    <color name="caisse_clair">#178A60</color>
+    <color name="caisse_sombre">#0A4A33</color>
+
+    <!-- Jaune des etiquettes promo -->
+    <color name="promo">#FFD400</color>
+    <color name="promo_sombre">#C9A400</color>
+
+    <!-- Alertes -->
+    <color name="alerte">#C1272D</color>
+    <color name="alerte_sombre">#8E1B20</color>
+    <color name="attention">#E07B00</color>
+
+    <color name="blanc">#FFFFFF</color>
+</resources>

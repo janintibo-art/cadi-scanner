@@ -2,6 +2,22 @@
 
 Application Android native (Kotlin) pour suivre le total de son caddie **et** comparer les prix.
 
+## Direction visuelle
+
+L'interface emprunte au monde du magasin : **papier thermique, étiquette de gondole,
+ticket de caisse**.
+
+- **Palette** — encre `#14181C`, papier `#F2F1ED`, vert caisse `#0F6B4A`,
+  jaune étiquette `#FFD400`, rouge alerte `#C1272D`
+- **Typographie** — Roboto Condensed pour les prix (l'étiquette de rayon),
+  monospace pour les lignes de ticket. Polices natives Android, aucun téléchargement.
+- **Élément signature** — le total dessiné comme une vraie étiquette de gondole :
+  chiffres énormes, centimes surélevés, dégradé et ombre portée, bord inférieur
+  dentelé comme un ticket détachable, jauge de budget intégrée.
+- **Relief et mouvement** — boutons à socle qui s'enfoncent au toucher, cartes en
+  élévation, décompte animé du total, trait lumineux qui balaye la zone de visée,
+  barres du graphique qui montent à l'ouverture.
+
 ## Fonctions
 
 **Nouveau (lot 3)**

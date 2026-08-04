@@ -9,60 +9,94 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <TextView
+    <!-- Voile sombre en haut pour detacher le total de l'image -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/voile_haut" />
+
+    <com.exemple.cadi.EtiquetteTotal
         android:id="@+id/scanTotal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="122dp"
         android:layout_alignParentTop="true"
-        android:background="#1B5E20"
-        android:gravity="center"
-        android:padding="14dp"
-        android:text="0,00 €"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold" />
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginRight="14dp" />
 
     <TextView
         android:id="@+id/scanInfo"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/scanTotal"
-        android:background="#CC000000"
-        android:gravity="center"
-        android:padding="8dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/pilule_info"
+        android:fontFamily="sans-serif-condensed"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp"
         android:text="Visez un code-barres"
-        android:textColor="#FFFFFF"
-        android:textSize="15sp" />
+        android:textColor="@color/blanc"
+        android:textSize="14sp" />
+
+    <FrameLayout
+        android:id="@+id/zoneVisee"
+        android:layout_width="290dp"
+        android:layout_height="160dp"
+        android:layout_centerInParent="true">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cadre_scan" />
+
+        <!-- Trait de balayage anime -->
+        <View
+            android:id="@+id/traitScan"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/trait_scan" />
+    </FrameLayout>
 
     <View
-        android:layout_width="280dp"
-        android:layout_height="150dp"
-        android:layout_centerInParent="true"
-        android:background="@drawable/cadre_scan" />
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/voile_bas" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#CC000000"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:paddingLeft="14dp"
+        android:paddingTop="10dp"
+        android:paddingRight="14dp"
+        android:paddingBottom="18dp">
 
         <Button
             android:id="@+id/btnSaisie"
+            style="@style/Bouton.Secondaire"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
             android:layout_weight="1"
-            android:text="✏️ Sans code" />
+            android:text="Sans code-barres" />
 
         <Button
             android:id="@+id/btnTermine"
+            style="@style/Bouton.Principal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_weight="1"
-            android:text="✅ Terminé" />
+            android:text="J'ai fini" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -1,138 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/racine"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="14dp">
+    android:background="@color/papier"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="🛒 Cadi Scanner"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/total"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="#1B5E20"
-        android:gravity="center"
-        android:padding="14dp"
-        android:text="0,00 €"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/budget"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#EEEEEE"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="🎯 Définir un budget"
-        android:textSize="15sp" />
-
-    <TextView
-        android:id="@+id/rappelListe"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFF9C4"
-        android:gravity="center"
-        android:padding="10dp"
-        android:textSize="14sp"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/btnScanContinu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="🔎  Scan continu"
-        android:textSize="17sp" />
-
+    <!-- Bandeau titre, comme l'entete d'un ticket -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="@color/caisse_sombre"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="12dp"
+        android:paddingBottom="10dp">
 
-        <Button
-            android:id="@+id/btnPhoto"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="1"
-            android:text="📷 Étiquette" />
+            android:fontFamily="sans-serif-condensed"
+            android:letterSpacing="0.28"
+            android:text="CADI SCANNER"
+            android:textColor="@color/blanc"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnManuel"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="✏️ Manuel" />
-
-        <Button
-            android:id="@+id/btnVider"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_weight="1"
-            android:text="🗑️ Vider" />
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:text="- - - - - - - - - - - - - - -"
+            android:textColor="#66FFFFFF"
+            android:textSize="10sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnValider"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="1"
-            android:text="✅ Valider" />
-
-        <Button
-            android:id="@+id/btnHistorique"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="📊 Historique" />
-
-        <Button
-            android:id="@+id/btnExport"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_weight="1"
-            android:text="📤 Export" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btnListe"
-        style="?attr/materialButtonOutlinedStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="📝 Ma liste de courses" />
-
-    <ListView
-        android:id="@+id/liste"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="8dp"
-        android:divider="#DDDDDD"
-        android:dividerHeight="1dp" />
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/marge"
+            android:paddingTop="@dimen/marge"
+            android:paddingRight="@dimen/marge"
+            android:paddingBottom="10dp">
+
+            <!-- SIGNATURE : le total en etiquette de gondole -->
+            <com.exemple.cadi.EtiquetteTotal
+                android:id="@+id/total"
+                android:layout_width="match_parent"
+                android:layout_height="160dp" />
+
+            <TextView
+                android:id="@+id/budget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bouton_secondaire"
+                android:fontFamily="sans-serif-condensed"
+                android:gravity="center"
+                android:padding="12dp"
+                android:textColor="@color/encre"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/rappelListe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bandeau_liste"
+                android:paddingLeft="16dp"
+                android:paddingTop="11dp"
+                android:paddingRight="12dp"
+                android:paddingBottom="11dp"
+                android:textColor="@color/encre"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btnScanContinu"
+                style="@style/Bouton.Principal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Scanner mes articles" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnPhoto"
+                    style="@style/Bouton.Secondaire"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:text="Étiquette" />
+
+                <Button
+                    android:id="@+id/btnManuel"
+                    style="@style/Bouton.Secondaire"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Saisir" />
+
+                <Button
+                    android:id="@+id/btnVider"
+                    style="@style/Bouton.Secondaire"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:text="Vider" />
+            </LinearLayout>
+
+            <!-- Le caddie, presente comme un ticket de caisse -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                app:cardBackgroundColor="@color/papier_clair"
+                app:cardCornerRadius="@dimen/rayon_carte"
+                app:cardElevation="@dimen/relief_carte">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:id="@+id/enteteCaddie"
+                        style="@style/Pancarte"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Dans le caddie" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/papier_ombre" />
+
+                    <TextView
+                        android:id="@+id/caddieVide"
+                        style="@style/LigneTicket"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="26dp"
+                        android:paddingBottom="26dp"
+                        android:text="Scannez un article pour commencer"
+                        android:visibility="gone" />
+
+                    <ListView
+                        android:id="@+id/liste"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@color/papier_ombre"
+                        android:dividerHeight="1dp"
+                        android:nestedScrollingEnabled="true" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnValider"
+                    style="@style/Bouton.Secondaire"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:text="Terminer" />
+
+                <Button
+                    android:id="@+id/btnHistorique"
+                    style="@style/Bouton.Secondaire"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Historique" />
+
+                <Button
+                    android:id="@+id/btnExport"
+                    style="@style/Bouton.Secondaire"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:text="Partager" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnListe"
+                style="@style/Bouton.Secondaire"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Ma liste de courses" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

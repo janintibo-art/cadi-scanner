@@ -1,4 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="Theme.Cadi" parent="Theme.Material3.DayNight.NoActionBar" />
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Cadi" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/caisse</item>
+        <item name="colorOnPrimary">@color/blanc</item>
+        <item name="colorSecondary">@color/promo</item>
+        <item name="android:colorBackground">@color/papier</item>
+        <item name="colorSurface">@color/papier_clair</item>
+        <item name="colorError">@color/alerte</item>
+        <item name="android:statusBarColor">@color/caisse_sombre</item>
+        <item name="android:navigationBarColor">@color/papier</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+    </style>
+
+    <!-- Ecran de scan : plein ecran sombre -->
+    <style name="Theme.Cadi.Scan" parent="Theme.Cadi">
+        <item name="android:statusBarColor">#000000</item>
+        <item name="android:navigationBarColor">#000000</item>
+    </style>
+
+    <!-- Titre de section, en capitales condensees comme une pancarte de rayon -->
+    <style name="Pancarte">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.12</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/encre_pale</item>
+    </style>
+
+    <!-- Ligne de ticket : chiffres alignes en monospace -->
+    <style name="LigneTicket">
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/encre_pale</item>
+    </style>
+
+    <!-- Bouton principal, avec relief -->
+    <style name="Bouton.Principal" parent="Widget.Material3.Button">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/bouton_principal</item>
+        <item name="android:textColor">@color/blanc</item>
+        <item name="android:stateListAnimator">@animator/enfoncement</item>
+    </style>
+
+    <!-- Bouton secondaire, papier avec liseré -->
+    <style name="Bouton.Secondaire" parent="Widget.Material3.Button.TextButton">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/encre</item>
+        <item name="android:paddingTop">11dp</item>
+        <item name="android:paddingBottom">11dp</item>
+        <item name="android:background">@drawable/bouton_secondaire</item>
+        <item name="android:stateListAnimator">@animator/enfoncement</item>
+    </style>
+
+    <!-- Petit bouton rond des quantites -->
+    <style name="Bouton.Rond" parent="Widget.Material3.Button.TextButton">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:layout_width">42dp</item>
+        <item name="android:layout_height">42dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/encre</item>
+        <item name="android:background">@drawable/bouton_rond</item>
+        <item name="android:stateListAnimator">@animator/enfoncement</item>
+    </style>
+
 </resources>

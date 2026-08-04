@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFF8DC" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+    <!-- liseré jaune vertical a gauche, comme un marque-page -->
+    <item android:right="-10dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/promo" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+    <item android:left="6dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#FFF8DC" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+</layer-list>

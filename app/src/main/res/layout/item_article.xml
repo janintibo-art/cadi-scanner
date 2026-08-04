@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:padding="6dp">
+    android:orientation="horizontal"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -16,58 +17,62 @@
             android:id="@+id/nom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="2"
             android:ellipsize="end"
-            android:textSize="15sp"
+            android:fontFamily="sans-serif-condensed"
+            android:maxLines="2"
+            android:textColor="@color/encre"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/ligne"
+            style="@style/LigneTicket"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp" />
+            android:layout_marginTop="1dp" />
 
         <TextView
             android:id="@+id/promo"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#B8860B"
-            android:textSize="13sp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/tag_promo"
+            android:fontFamily="sans-serif-condensed"
+            android:paddingLeft="8dp"
+            android:paddingTop="3dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="3dp"
+            android:textColor="@color/encre"
+            android:textSize="12sp"
+            android:textStyle="bold"
             android:visibility="gone" />
     </LinearLayout>
 
     <Button
         android:id="@+id/btnMoins"
-        style="?attr/materialButtonOutlinedStyle"
-        android:layout_width="48dp"
-        android:layout_height="wrap_content"
-        android:minWidth="0dp"
+        style="@style/Bouton.Rond"
         android:text="−" />
 
     <TextView
         android:id="@+id/qte"
-        android:layout_width="wrap_content"
+        android:layout_width="34dp"
         android:layout_height="wrap_content"
-        android:minWidth="28dp"
+        android:fontFamily="sans-serif-condensed"
         android:gravity="center"
-        android:textSize="16sp"
+        android:textColor="@color/encre"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <Button
         android:id="@+id/btnPlus"
-        style="?attr/materialButtonOutlinedStyle"
-        android:layout_width="48dp"
-        android:layout_height="wrap_content"
-        android:minWidth="0dp"
+        style="@style/Bouton.Rond"
         android:text="+" />
 
     <Button
         android:id="@+id/btnSuppr"
-        style="?attr/materialButtonOutlinedStyle"
-        android:layout_width="48dp"
-        android:layout_height="wrap_content"
+        style="@style/Bouton.Rond"
         android:layout_marginStart="4dp"
-        android:minWidth="0dp"
+        android:textColor="@color/alerte"
         android:text="✕" />
 
 </LinearLayout>

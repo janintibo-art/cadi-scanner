@@ -29,7 +29,7 @@ import java.util.Locale
 class MainActivity : AppCompatActivity() {
 
     private lateinit var adapter: ArticleAdapter
-    private lateinit var totalView: TextView
+    private lateinit var totalView: EtiquetteTotal
     private lateinit var budgetView: TextView
     private lateinit var racine: View
     private lateinit var feedback: Feedback
@@ -282,34 +282,35 @@ class MainActivity : AppCompatActivity() {
 
     private fun maj() {
         majRappelListe()
-        totalView.text = "${fmt(Caddie.total)}   •   ${Caddie.nbArticles} article${if (Caddie.nbArticles > 1) "s" else ""}"
+
+        val nb = Caddie.nbArticles
+        val legende = when {
+            nb == 0 -> "Caddie vide"
+            Caddie.economies > 0.005 ->
+                "$nb article${pluriel(nb)}  ·  ${fmt(Caddie.economies)} économisés"
+            else -> "$nb article${pluriel(nb)}"
+        }
+        totalView.afficher(Caddie.total, Caddie.budget, legende)
 
         val ratio = Caddie.ratioBudget
-        when {
-            ratio == null -> {
-                totalView.setBackgroundColor(0xFF1B5E20.toInt())
-                budgetView.text = if (Caddie.economies > 0.005)
-                    "💰 ${fmt(Caddie.economies)} économisés — 🎯 définir un budget"
-                else "🎯 Définir un budget"
-            }
-            ratio >= 1.0 -> {
-                totalView.setBackgroundColor(0xFFB71C1C.toInt())
-                budgetView.text = "⚠️ Budget ${fmt(Caddie.budget)} dépassé de ${fmt(Caddie.total - Caddie.budget)}"
-                if (!alerteDejaJouee) { feedback.alerte(); alerteDejaJouee = true }
-            }
-            ratio >= 0.8 -> {
-                totalView.setBackgroundColor(0xFFE65100.toInt())
-                budgetView.text = "Budget ${fmt(Caddie.budget)} — reste ${fmt(Caddie.budget - Caddie.total)}"
-                alerteDejaJouee = false
-            }
-            else -> {
-                totalView.setBackgroundColor(0xFF1B5E20.toInt())
-                budgetView.text = "Budget ${fmt(Caddie.budget)} — reste ${fmt(Caddie.budget - Caddie.total)}"
-                alerteDejaJouee = false
-            }
+        budgetView.text = when {
+            ratio == null -> "Définir un budget"
+            ratio >= 1.0 -> "Budget dépassé de ${fmt(Caddie.total - Caddie.budget)}"
+            else -> "Il reste ${fmt(Caddie.budget - Caddie.total)} sur ${fmt(Caddie.budget)}"
         }
+        if (ratio != null && ratio >= 1.0 && !alerteDejaJouee) {
+            feedback.alerte(); alerteDejaJouee = true
+        } else if (ratio == null || ratio < 1.0) alerteDejaJouee = false
+
+        findViewById<TextView>(R.id.caddieVide).visibility =
+            if (Caddie.articles.isEmpty()) View.VISIBLE else View.GONE
+        findViewById<TextView>(R.id.enteteCaddie).text =
+            if (nb == 0) "Dans le caddie" else "Dans le caddie · $nb"
+
         adapter.notifyDataSetChanged()
     }
+
+    private fun pluriel(n: Int) = if (n > 1) "s" else ""
 
     /** Affiche ce qu'il reste a prendre si une liste est en cours. */
     private fun majRappelListe() {
@@ -319,14 +320,12 @@ class MainActivity : AppCompatActivity() {
             ListeCourses.items.isEmpty() -> rappel.visibility = View.GONE
             restants == 0 -> {
                 rappel.visibility = View.VISIBLE
-                rappel.text = "✅ Liste terminée"
-                rappel.setBackgroundColor(0xFFC8E6C9.toInt())
+                rappel.text = "Liste terminée — tout est dans le caddie"
             }
             else -> {
                 rappel.visibility = View.VISIBLE
                 val noms = ListeCourses.items.filter { !it.coche }.take(3).joinToString(", ") { it.nom }
-                rappel.text = "📝 Reste $restants : $noms" + if (restants > 3) "…" else ""
-                rappel.setBackgroundColor(0xFFFFF9C4.toInt())
+                rappel.text = "Reste $restants : $noms" + if (restants > 3) "…" else ""
             }
         }
     }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#33FFFFFF">
+    <item>
+        <layer-list>
+            <!-- socle sombre qui donne l'epaisseur -->
+            <item android:bottom="0dp" android:top="3dp">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/caisse_sombre" />
+                    <corners android:radius="12dp" />
+                </shape>
+            </item>
+            <!-- face superieure -->
+            <item android:bottom="3dp">
+                <shape android:shape="rectangle">
+                    <gradient
+                        android:angle="270"
+                        android:endColor="@color/caisse"
+                        android:startColor="@color/caisse_clair" />
+                    <corners android:radius="12dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</ripple>
