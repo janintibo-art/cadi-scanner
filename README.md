@@ -4,6 +4,13 @@ Application Android native (Kotlin) pour suivre le total de son caddie **et** co
 
 ## Fonctions
 
+**Nouveau (lot 1)**
+- 🔎 **Scan continu** : la caméra reste ouverte, on enchaîne les articles sans revenir en arrière
+- 🎯 **Budget plafond** : total vert → orange à 80 % → rouge + vibration au dépassement
+- 🔊 **Bip + vibration** à chaque code reconnu (pas besoin de regarder l'écran)
+- ↩️ **Annuler** la dernière action via le bandeau qui apparaît en bas
+
+
 - 🔎 **Scan du code-barres** → nom du produit, **prix moyen relevé**, **prix le plus bas connu**, et **le moins cher dans un rayon de 20 km** autour de vous
 - 📷 **Photo de l'étiquette** → l'OCR détecte le prix (hors-ligne, ML Kit)
 - ➕ Quantités ×2, ×3… avec boutons + / −, total en direct

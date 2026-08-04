@@ -39,4 +39,9 @@ dependencies {
     implementation("com.google.mlkit:text-recognition:16.0.0")
     // Lecture des codes-barres EAN/UPC, egalement hors-ligne
     implementation("com.google.mlkit:barcode-scanning:17.3.0")
+    // CameraX : apercu temps reel + analyse d'images pour le scan continu
+    implementation("androidx.camera:camera-core:1.3.4")
+    implementation("androidx.camera:camera-camera2:1.3.4")
+    implementation("androidx.camera:camera-lifecycle:1.3.4")
+    implementation("androidx.camera:camera-view:1.3.4")
 }

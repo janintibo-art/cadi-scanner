@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/infoPrix"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:textSize="14sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Prix en rayon (€)"
+        android:textSize="13sp" />
+
+    <EditText
+        android:id="@+id/champPrix"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="2,49"
+        android:importantForAutofill="no"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Quantité"
+        android:textSize="13sp" />
+
+    <EditText
+        android:id="@+id/champQte"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:importantForAutofill="no"
+        android:text="1"
+        android:textSize="20sp" />
+
+</LinearLayout>
