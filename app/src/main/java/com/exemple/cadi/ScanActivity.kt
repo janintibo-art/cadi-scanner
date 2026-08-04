@@ -62,6 +62,7 @@ class ScanActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan)
         Caddie.init(this)
+        Historique.init(this)
         feedback = Feedback(this)
 
         apercu = findViewById(R.id.apercu)

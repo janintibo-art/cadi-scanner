@@ -32,6 +32,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Cadi" />
 
+        <activity
+            android:name=".HistoriqueActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Cadi" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

@@ -26,6 +26,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/promo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#B8860B"
+            android:textSize="13sp"
+            android:visibility="gone" />
     </LinearLayout>
 
     <Button

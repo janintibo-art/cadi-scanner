@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Caddie.init(this)
+        Historique.init(this)
         feedback = Feedback(this)
 
         racine = findViewById(R.id.racine)
@@ -65,6 +66,11 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnPhoto).setOnClickListener { lancerCamera() }
         findViewById<Button>(R.id.btnManuel).setOnClickListener { saisieManuelle(null, null) }
         findViewById<Button>(R.id.btnVider).setOnClickListener { confirmerVider() }
+        findViewById<Button>(R.id.btnValider).setOnClickListener { validerCourses() }
+        findViewById<Button>(R.id.btnHistorique).setOnClickListener {
+            startActivity(Intent(this, HistoriqueActivity::class.java))
+        }
+        findViewById<Button>(R.id.btnExport).setOnClickListener { menuExport() }
         budgetView.setOnClickListener { definirBudget() }
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -123,42 +129,62 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun traiterTexte(texte: String) {
-        val regex = Regex("""(\d{1,4})\s*[.,]\s*(\d{2})(?!\d)""")
-        val candidats = regex.findAll(texte)
-            .map { it.groupValues[1].toInt() + it.groupValues[2].toInt() / 100.0 }
-            .filter { it in 0.05..2000.0 }
-            .distinct().toList()
+        val prix = EtiquetteParser.prix(texte)
+        val promo = EtiquetteParser.promo(texte)
 
-        when {
-            candidats.isEmpty() -> { feedback.echec(); saisieManuelle(null, null) }
-            candidats.size == 1 -> { feedback.succes(); demanderQuantite(candidats[0], "Article", null) }
-            else -> {
-                feedback.succes()
-                AlertDialog.Builder(this)
-                    .setTitle("Quel est le prix ?")
-                    .setItems(candidats.map { fmt(it) }.toTypedArray()) { _, i ->
-                        demanderQuantite(candidats[i], "Article", null)
-                    }
-                    .setNegativeButton("Annuler", null)
-                    .show()
-            }
+        if (prix.isEmpty()) {
+            feedback.echec()
+            saisieManuelle(null, null)
+            return
         }
+        feedback.succes()
+
+        // Un seul prix unitaire et pas d'ambiguite : on enchaine directement
+        val principal = EtiquetteParser.prixPrincipal(prix)
+        if (prix.size == 1 && principal != null) {
+            demanderQuantite(principal.valeur, "Article", null, promo)
+            return
+        }
+
+        // Sinon on montre la nature de chaque montant lu (unite, kilo, litre)
+        val titre = promo?.let { "Promo détectée : ${it.libelle}" } ?: "Quel est le prix ?"
+        val libelles = prix.map { it.libelle }.toTypedArray()
+
+        AlertDialog.Builder(this)
+            .setTitle(titre)
+            .setMessage("Choisissez le prix de vente (les prix au kg ou au L servent seulement à comparer)")
+            .setItems(libelles) { _, i ->
+                demanderQuantite(prix[i].valeur, "Article", null, promo)
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
     }
 
     // ---------- Saisie ----------
 
-    private fun demanderQuantite(prix: Double, nom: String, code: String?) {
+    private fun demanderQuantite(
+        prix: Double, nom: String, code: String?, promo: Promo? = null
+    ) {
+        val qteDepart = promo?.quantiteConseillee ?: 1
         val input = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_NUMBER
-            setText("1"); setSelection(1)
+            setText(qteDepart.toString()); setSelection(length())
         }
+
+        val message = if (promo != null) {
+            val t = promo.totalPour(qteDepart, prix)
+            "Offre : ${promo.libelle}\n" +
+                "Pour $qteDepart articles vous payez ${fmt(t)} " +
+                "au lieu de ${fmt(prix * qteDepart)}.\n\nQuantité :"
+        } else "Quantité :"
+
         AlertDialog.Builder(this)
             .setTitle("$nom — ${fmt(prix)}")
-            .setMessage("Quantité :")
+            .setMessage(message)
             .setView(input)
             .setPositiveButton("Ajouter") { _, _ ->
                 val q = input.text.toString().toIntOrNull() ?: 1
-                Caddie.ajouter(prix, if (q < 1) 1 else q, nom, code)
+                Caddie.ajouter(prix, if (q < 1) 1 else q, nom, code, promo)
                 maj(); annulable()
             }
             .setNegativeButton("Annuler", null)
@@ -191,6 +217,48 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    // ---------- Fin de courses / export ----------
+
+    private fun validerCourses() {
+        if (Caddie.articles.isEmpty()) return toast("Le caddie est vide")
+
+        val input = EditText(this).apply {
+            hint = "Nom du magasin (facultatif)"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Valider les courses")
+            .setMessage("Total ${fmt(Caddie.total)} — la liste sera archivée puis le caddie vidé.")
+            .setView(input)
+            .setPositiveButton("Archiver") { _, _ ->
+                Historique.archiver(input.text.toString())
+                Caddie.vider()
+                maj()
+                toast("Course archivée")
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+
+    private fun menuExport() {
+        if (Caddie.articles.isEmpty()) return toast("Le caddie est vide")
+        AlertDialog.Builder(this)
+            .setTitle("Exporter la liste")
+            .setItems(arrayOf("Envoyer en texte", "Fichier CSV (tableur)")) { _, i ->
+                if (i == 0) Export.partagerTexte(
+                    this,
+                    Export.texte(Caddie.articles, Caddie.total, Caddie.economies),
+                    "Mes courses"
+                ) else Export.partagerCsv(
+                    this,
+                    Export.csv(Caddie.articles, Caddie.total),
+                    "courses.csv"
+                )
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+
     // ---------- Annulation ----------
 
     private fun annulable() {
@@ -211,7 +279,9 @@ class MainActivity : AppCompatActivity() {
         when {
             ratio == null -> {
                 totalView.setBackgroundColor(0xFF1B5E20.toInt())
-                budgetView.text = "🎯 Définir un budget"
+                budgetView.text = if (Caddie.economies > 0.005)
+                    "💰 ${fmt(Caddie.economies)} économisés — 🎯 définir un budget"
+                else "🎯 Définir un budget"
             }
             ratio >= 1.0 -> {
                 totalView.setBackgroundColor(0xFFB71C1C.toInt())
@@ -253,7 +323,14 @@ class MainActivity : AppCompatActivity() {
 
             v.findViewById<TextView>(R.id.nom).text = a.nom
             v.findViewById<TextView>(R.id.ligne).text =
-                "${fmt(a.prix)} × ${a.quantite} = ${fmt(a.prix * a.quantite)}"
+                "${fmt(a.prix)} × ${a.quantite} = ${fmt(a.total)}"
+
+            val vuePromo = v.findViewById<TextView>(R.id.promo)
+            if (a.promo != null) {
+                vuePromo.visibility = View.VISIBLE
+                vuePromo.text = "🏷️ ${a.promo}" +
+                    if (a.economie > 0.005) "  −${fmt(a.economie)}" else ""
+            } else vuePromo.visibility = View.GONE
             v.findViewById<TextView>(R.id.qte).text = a.quantite.toString()
 
             v.findViewById<Button>(R.id.btnMoins).setOnClickListener {

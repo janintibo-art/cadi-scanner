@@ -4,7 +4,13 @@ Application Android native (Kotlin) pour suivre le total de son caddie **et** co
 
 ## Fonctions
 
-**Nouveau (lot 1)**
+**Nouveau (lot 2)**
+- 📊 **Historique des courses** : chaque caddie validé est archivé (date, magasin, détail), avec graphique des 6 derniers mois et panier moyen
+- 🏷️ **Détection des lots promo** : « 2 achetés = 1 offert », « 2ᵉ à -50 % », « les 3 pour 5 € », « -30 % » → le vrai prix payé est calculé et l'économie affichée
+- ⚖️ **Prix au kilo distingué** du prix de vente : plus de confusion entre 3,49 €/kg et le prix unitaire
+- 📤 **Export** de la liste en texte (WhatsApp, SMS) ou en CSV (tableur)
+
+**Lot 1**
 - 🔎 **Scan continu** : la caméra reste ouverte, on enchaîne les articles sans revenir en arrière
 - 🎯 **Budget plafond** : total vert → orange à 80 % → rouge + vibration au dépassement
 - 🔊 **Bip + vibration** à chaque code reconnu (pas besoin de regarder l'écran)

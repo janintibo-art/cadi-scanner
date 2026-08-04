@@ -8,8 +8,18 @@ data class Article(
     var prix: Double,
     var quantite: Int,
     var nom: String = "Article",
-    var code: String? = null
-)
+    var code: String? = null,
+    /** Libelle de l'offre promotionnelle, ex "2 acheté(s) = 1 offert". */
+    var promo: String? = null,
+    /** Total reel de la ligne quand une promo s'applique. */
+    var totalPromo: Double? = null
+) {
+    /** Total de la ligne, promo appliquee si elle existe. */
+    val total: Double get() = totalPromo ?: (prix * quantite)
+
+    /** Economie realisee grace a la promo. */
+    val economie: Double get() = (prix * quantite) - total
+}
 
 /** Une action annulable. */
 private class Action(val libelle: String, val annuler: () -> Unit)
@@ -28,7 +38,10 @@ object Caddie {
     var budget: Double = 0.0
         set(v) { field = v; sauver() }
 
-    val total: Double get() = articles.sumOf { it.prix * it.quantite }
+    val total: Double get() = articles.sumOf { it.total }
+
+    /** Total des economies realisees grace aux promotions detectees. */
+    val economies: Double get() = articles.sumOf { it.economie }
     val nbArticles: Int get() = articles.sumOf { it.quantite }
 
     /** Part du budget consommee, ou null si aucun budget defini. */
@@ -42,16 +55,27 @@ object Caddie {
 
     // ---------- Operations ----------
 
-    fun ajouter(prix: Double, quantite: Int, nom: String, code: String?) {
-        val existant = articles.find { it.code != null && it.code == code }
-            ?: articles.find { it.prix == prix && it.nom == nom }
+    fun ajouter(
+        prix: Double,
+        quantite: Int,
+        nom: String,
+        code: String?,
+        promo: Promo? = null
+    ) {
+        val libelle = promo?.libelle
+        val total = promo?.totalPour(quantite, prix)
+
+        // Une ligne en promo reste separee pour ne pas fausser le calcul
+        val existant = if (promo != null) null else
+            articles.find { it.promo == null && it.code != null && it.code == code }
+                ?: articles.find { it.promo == null && it.prix == prix && it.nom == nom }
 
         if (existant != null) {
             val avant = existant.quantite
             existant.quantite += quantite
             memoriser("$quantite × $nom") { existant.quantite = avant }
         } else {
-            val a = Article(prix, quantite, nom, code)
+            val a = Article(prix, quantite, nom, code, libelle, total)
             articles.add(0, a)
             memoriser("$quantite × $nom") { articles.remove(a) }
         }
@@ -65,7 +89,8 @@ object Caddie {
             memoriser("Retrait de ${a.nom}") { articles.add(index, a) }
         } else {
             a.quantite += delta
-            memoriser("Quantité de ${a.nom}") { a.quantite -= delta }
+            recalculer(a)
+            memoriser("Quantité de ${a.nom}") { a.quantite -= delta; recalculer(a) }
         }
         sauver()
     }
@@ -82,6 +107,12 @@ object Caddie {
         articles.clear()
         memoriser("Caddie vidé") { articles.addAll(copie) }
         sauver()
+    }
+
+    /** Reapplique la formule de la promo apres un changement de quantite. */
+    private fun recalculer(a: Article) {
+        val libelle = a.promo ?: return
+        a.totalPromo = Promos.depuisLibelle(libelle)?.totalPour(a.quantite, a.prix)
     }
 
     // ---------- Annulation ----------
@@ -109,6 +140,7 @@ object Caddie {
             arr.put(
                 JSONObject().put("p", it.prix).put("q", it.quantite)
                     .put("n", it.nom).put("c", it.code ?: "")
+                    .put("pr", it.promo ?: "").put("tp", it.totalPromo ?: -1.0)
             )
         }
         prefs?.edit()
@@ -129,7 +161,9 @@ object Caddie {
                     Article(
                         o.getDouble("p"), o.getInt("q"),
                         o.optString("n", "Article"),
-                        o.optString("c").takeIf { it.isNotBlank() }
+                        o.optString("c").takeIf { it.isNotBlank() },
+                        o.optString("pr").takeIf { it.isNotBlank() },
+                        o.optDouble("tp", -1.0).takeIf { it >= 0 }
                     )
                 )
             }
