@@ -37,6 +37,16 @@
         android:text="🎯 Définir un budget"
         android:textSize="15sp" />
 
+    <TextView
+        android:id="@+id/rappelListe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFF9C4"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/btnScanContinu"
         android:layout_width="match_parent"
@@ -108,6 +118,13 @@
             android:layout_weight="1"
             android:text="📤 Export" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnListe"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📝 Ma liste de courses" />
 
     <ListView
         android:id="@+id/liste"

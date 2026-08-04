@@ -51,6 +51,33 @@ object Export {
         }
     }
 
+    /**
+     * Ouvre Open Prices pour contribuer un prix releve.
+     * Le detail est copie dans le presse-papier pour etre colle dans le formulaire.
+     * (L'envoi direct par l'API demandera un compte Open Food Facts et une
+     * photo de preuve : voir le README.)
+     */
+    fun contribuerOpenPrices(ctx: Context, code: String?, prix: Double, magasin: String) {
+        val resume = buildString {
+            append("Code-barres : ${code ?: "sans code"}\n")
+            append("Prix : ${euro(prix)} €\n")
+            append("Magasin : ${magasin.ifBlank { "à préciser" }}\n")
+            append("Date : ${SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE).format(Date())}")
+        }
+        try {
+            val cm = ctx.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+            cm.setPrimaryClip(android.content.ClipData.newPlainText("Relevé de prix", resume))
+        } catch (_: Exception) { }
+
+        try {
+            ctx.startActivity(
+                Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://prices.openfoodfacts.org"))
+            )
+        } catch (e: Exception) {
+            partagerTexte(ctx, resume, "Relevé de prix")
+        }
+    }
+
     /** Partage un texte brut (messagerie, notes...). */
     fun partagerTexte(ctx: Context, contenu: String, titre: String) {
         val i = Intent(Intent.ACTION_SEND).apply {

@@ -52,6 +52,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         Caddie.init(this)
         Historique.init(this)
+        MemoirePrix.init(this)
+        ListeCourses.init(this)
         feedback = Feedback(this)
 
         racine = findViewById(R.id.racine)
@@ -71,6 +73,9 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, HistoriqueActivity::class.java))
         }
         findViewById<Button>(R.id.btnExport).setOnClickListener { menuExport() }
+        findViewById<Button>(R.id.btnListe).setOnClickListener {
+            startActivity(Intent(this, ListeActivity::class.java))
+        }
         budgetView.setOnClickListener { definirBudget() }
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -231,10 +236,13 @@ class MainActivity : AppCompatActivity() {
             .setMessage("Total ${fmt(Caddie.total)} — la liste sera archivée puis le caddie vidé.")
             .setView(input)
             .setPositiveButton("Archiver") { _, _ ->
-                Historique.archiver(input.text.toString())
+                val magasin = input.text.toString()
+                MemoirePrix.enregistrerCourse(Caddie.articles, magasin)
+                Historique.archiver(magasin)
                 Caddie.vider()
+                ListeCourses.viderCoches()
                 maj()
-                toast("Course archivée")
+                toast("Course archivée — ${MemoirePrix.nbReleves} prix mémorisés")
             }
             .setNegativeButton("Annuler", null)
             .show()
@@ -273,6 +281,7 @@ class MainActivity : AppCompatActivity() {
     // ---------- Affichage ----------
 
     private fun maj() {
+        majRappelListe()
         totalView.text = "${fmt(Caddie.total)}   •   ${Caddie.nbArticles} article${if (Caddie.nbArticles > 1) "s" else ""}"
 
         val ratio = Caddie.ratioBudget
@@ -300,6 +309,26 @@ class MainActivity : AppCompatActivity() {
             }
         }
         adapter.notifyDataSetChanged()
+    }
+
+    /** Affiche ce qu'il reste a prendre si une liste est en cours. */
+    private fun majRappelListe() {
+        val rappel = findViewById<TextView>(R.id.rappelListe)
+        val restants = ListeCourses.restants
+        when {
+            ListeCourses.items.isEmpty() -> rappel.visibility = View.GONE
+            restants == 0 -> {
+                rappel.visibility = View.VISIBLE
+                rappel.text = "✅ Liste terminée"
+                rappel.setBackgroundColor(0xFFC8E6C9.toInt())
+            }
+            else -> {
+                rappel.visibility = View.VISIBLE
+                val noms = ListeCourses.items.filter { !it.coche }.take(3).joinToString(", ") { it.nom }
+                rappel.text = "📝 Reste $restants : $noms" + if (restants > 3) "…" else ""
+                rappel.setBackgroundColor(0xFFFFF9C4.toInt())
+            }
+        }
     }
 
     private fun fmt(v: Double) = String.format(Locale.FRANCE, "%.2f €", v)

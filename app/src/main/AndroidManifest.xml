@@ -37,6 +37,11 @@
             android:exported="false"
             android:theme="@style/Theme.Cadi" />
 
+        <activity
+            android:name=".ListeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Cadi" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

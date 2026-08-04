@@ -63,6 +63,8 @@ class ScanActivity : AppCompatActivity() {
         setContentView(R.layout.activity_scan)
         Caddie.init(this)
         Historique.init(this)
+        MemoirePrix.init(this)
+        ListeCourses.init(this)
         feedback = Feedback(this)
 
         apercu = findViewById(R.id.apercu)
@@ -149,18 +151,43 @@ class ScanActivity : AppCompatActivity() {
 
     private fun proposer(code: String, c: Comparatif) {
         val nom = c.nomProduit ?: "Produit $code"
-        val mini = c.moinsCher
+
+        // Ce que l'utilisateur a lui-meme paye par le passe : source la plus fiable
+        val perso = MemoirePrix.synthese(code, nom)
+        val resumePerso = perso.resume()
+
+        // Coche automatiquement l'article s'il figure dans la liste de courses
+        val coche = ListeCourses.cocherParCode(code) ?: ListeCourses.cocherParNom(nom)
+
+        val infos = mutableListOf<String>()
+        coche?.let { infos.add("✅ « $it » coché dans votre liste") }
+        resumePerso?.let { infos.add("🧠 $it") }
 
         if (c.releves.isEmpty()) {
-            feedback.echec()
-            bandeauInfo.text = "$nom — aucun prix connu"
-            saisirPrix(nom, code, null)
+            if (resumePerso == null) feedback.echec() else feedback.succes()
+            bandeauInfo.text = if (coche != null) "$nom — coché" else "$nom"
+            infos.add("Aucun relevé communautaire pour ce produit.")
+            saisirPrix(
+                nom, code,
+                perso.dernier?.prix,
+                infos.joinToString("\n\n")
+            )
             return
         }
 
         val moyenne = c.moyenne!!
+        val mini = c.moinsCher!!
+        infos.add(
+            "🌍 Open Prices : moyenne ${fmt(moyenne)} • mini ${fmt(mini.prix)}" +
+                if (mini.magasin.isNotBlank()) " (${mini.magasin})" else ""
+        )
+
         bandeauInfo.text = "$nom — moyenne ${fmt(moyenne)}"
-        saisirPrix(nom, code, mini?.prix, "Moyenne relevée ${fmt(moyenne)} • mini ${fmt(mini!!.prix)}")
+        saisirPrix(
+            nom, code,
+            perso.dernier?.prix ?: mini.prix,
+            infos.joinToString("\n\n")
+        )
     }
 
     /** Boite de saisie prix + quantite, puis reprise du scan. */
@@ -186,12 +213,24 @@ class ScanActivity : AppCompatActivity() {
                 if (p != null && p > 0) {
                     Caddie.ajouter(p, if (q < 1) 1 else q, nom, code)
                     majBandeau()
+                    // Prevenir si le prix a nettement augmente par rapport a l'habitude
+                    MemoirePrix.synthese(code, nom).alerteHausse(p)?.let {
+                        Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                    }
                 } else {
                     Toast.makeText(this, "Prix ignoré", Toast.LENGTH_SHORT).show()
                 }
                 reprendre()
             }
             .setNegativeButton("Passer") { _, _ -> reprendre() }
+            .setNeutralButton("🌍 Contribuer") { _, _ ->
+                val p = champPrix.text.toString().replace(',', '.').toDoubleOrNull()
+                if (p != null && p > 0)
+                    Export.contribuerOpenPrices(this, code, p, "")
+                else
+                    Toast.makeText(this, "Saisissez d'abord le prix", Toast.LENGTH_SHORT).show()
+                reprendre()
+            }
             .show()
     }
 

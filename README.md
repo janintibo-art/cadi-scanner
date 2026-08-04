@@ -4,7 +4,18 @@ Application Android native (Kotlin) pour suivre le total de son caddie **et** co
 
 ## Fonctions
 
-**Nouveau (lot 2)**
+**Nouveau (lot 3)**
+- 🧠 **Mémoire de vos prix** : l'app retient ce que *vous* avez payé, où et quand. Au scan : « Vous l'avez payé 2,49 € chez Lidl le 12/07 », avec vos min/max/moyenne et une alerte si le prix a grimpé de plus de 10 %
+- 📝 **Liste de courses** : préparez-la à l'avance, les articles se **cochent tout seuls** quand vous les scannez. Bandeau de rappel sur l'écran principal
+- ⭐ **Suggestions** basées sur vos achats les plus fréquents
+- 🌍 **Contribuer à Open Prices** : bouton qui copie le relevé et ouvre le site
+
+> Note sur la contribution : l'envoi direct par l'API demande un compte Open Food Facts,
+> un jeton Bearer et l'upload d'une photo de preuve. Le format exact du POST n'est pas
+> documenté publiquement (il est dans le Swagger généré sur `/api/docs`), donc l'app
+> passe pour l'instant par le site plutôt que d'utiliser des endpoints devinés.
+
+**Lot 2**
 - 📊 **Historique des courses** : chaque caddie validé est archivé (date, magasin, détail), avec graphique des 6 derniers mois et panier moyen
 - 🏷️ **Détection des lots promo** : « 2 achetés = 1 offert », « 2ᵉ à -50 % », « les 3 pour 5 € », « -30 % » → le vrai prix payé est calculé et l'économie affichée
 - ⚖️ **Prix au kilo distingué** du prix de vente : plus de confusion entre 3,49 €/kg et le prix unitaire
